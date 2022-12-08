@@ -8,5 +8,14 @@ bot.on('message', (msg) => {
   const text = msg.text;
   const chatID = msg.chat.id;
 
-  bot.sendMessage(chatID, `Ты написал: ${text}`);
+  if (text === '/start') {
+    bot.sendMessage(chatID, `Welcome ${msg.from.username}`);
+  }
+
+  if (text === '/info') {
+    bot.sendMessage(
+      chatID,
+      `Тебя зовут: ${msg.from.first_name} ${msg.from.last_name}`
+    );
+  }
 });
