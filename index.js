@@ -4,6 +4,16 @@ const token = '5515532924:AAFeu3va7IjgPAECs4nUOAzblw1MLqDZBJs';
 
 const bot = new TelegramAPI(token, { polling: true });
 
+const chats = {};
+
+const gameOptions = {
+  reply_markup: JSON.stringify({
+    inline_keyboard: [
+      [{ text: 'Текст кнопки', callback_data: 'callback-data' }],
+    ],
+  }),
+};
+
 const start = () => {
   bot.setMyCommands([
     {
@@ -11,6 +21,7 @@ const start = () => {
       description: 'Приветствие',
     },
     { command: '/info', description: 'Получить информацию' },
+    { command: '/game', description: 'Сыграть в игру' },
   ]);
 
   bot.on('message', async (msg) => {
@@ -30,6 +41,13 @@ const start = () => {
         chatID,
         `Тебя зовут: ${msg.from.first_name} ${msg.from.last_name}`
       );
+    }
+
+    if (text === '/game') {
+      const randomNumber = Math.floor(Math.random() * 10);
+
+      chats[chatID] = randomNumber;
+      return bot.sendMessage(chatID, 'Отгадай', gameOptions);
     }
 
     return bot.sendMessage(chatID, 'Я тебя не понимаю');
