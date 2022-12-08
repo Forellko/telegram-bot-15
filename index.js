@@ -8,8 +8,39 @@ const chats = {};
 
 const gameOptions = {
   reply_markup: JSON.stringify({
-    inline_keyboard: [[{ text: 'Текст кнопки', callback_data: '1' }]],
+    inline_keyboard: [
+      [
+        { text: '1', callback_data: '1' },
+        { text: '2', callback_data: '2' },
+        { text: '3', callback_data: '3' },
+      ],
+      [
+        { text: '4', callback_data: '4' },
+        { text: '5', callback_data: '5' },
+        { text: '6', callback_data: '6' },
+      ],
+      [
+        { text: '7', callback_data: '7' },
+        { text: '8', callback_data: '8' },
+        { text: '9', callback_data: '9' },
+      ],
+      [{ text: '0', callback_data: '0' }],
+    ],
   }),
+};
+
+const againOptions = {
+  reply_markup: JSON.stringify({
+    inline_keyboard: [[{ text: 'Играть еще раз', callback_data: '/again' }]],
+  }),
+};
+
+const startGame = async (chatID) => {
+  const randomNumber = Math.floor(Math.random() * 10);
+
+  chats[chatID] = randomNumber;
+  await bot.sendMessage(chatID, 'Отгадай цифру', gameOptions);
+  console.log(randomNumber);
 };
 
 const start = () => {
@@ -42,16 +73,22 @@ const start = () => {
     }
 
     if (text === '/game') {
-      const randomNumber = Math.floor(Math.random() * 10);
-
-      chats[chatID] = randomNumber;
-      return bot.sendMessage(chatID, 'Отгадай', gameOptions);
+      startGame(chatID);
     }
 
     return bot.sendMessage(chatID, 'Я тебя не понимаю');
   });
-  bot.on('callback_query', (msg) => {
-    console.log(msg);
+  bot.on('callback_query', async (msg) => {
+    const data = msg.data;
+    const chatID = msg.message.chat.id;
+    if (data === '/again') {
+      return startGame(chatID);
+    }
+    if (+data === +chats[chatID]) {
+      bot.sendMessage(chatID, 'Угадал', againOptions);
+    } else {
+      bot.sendMessage(chatID, 'Не угадал', againOptions);
+    }
   });
 };
 
