@@ -8,9 +8,7 @@ const chats = {};
 
 const gameOptions = {
   reply_markup: JSON.stringify({
-    inline_keyboard: [
-      [{ text: 'Текст кнопки', callback_data: 'callback-data' }],
-    ],
+    inline_keyboard: [[{ text: 'Текст кнопки', callback_data: '1' }]],
   }),
 };
 
@@ -51,6 +49,9 @@ const start = () => {
     }
 
     return bot.sendMessage(chatID, 'Я тебя не понимаю');
+  });
+  bot.on('callback_query', (msg) => {
+    console.log(msg);
   });
 };
 
