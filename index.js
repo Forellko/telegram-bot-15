@@ -1,4 +1,4 @@
-const { gameOptionsl, againOptions } = require('./options');
+const { gameOptions, againOptions } = require('./options');
 
 const TelegramAPI = require('node-telegram-bot-api');
 
@@ -13,7 +13,6 @@ const startGame = async (chatID) => {
 
   chats[chatID] = randomNumber;
   await bot.sendMessage(chatID, 'Отгадай цифру', gameOptions);
-  console.log(randomNumber);
 };
 
 const start = () => {
